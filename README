@@ -1,0 +1,262 @@
+// Copyright 314CC Miron Andreea Cristiana
+
+Programarea calculatoarelor si limbaje de programare
+
+Task #1 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Se deschide fisierul master.txt si se aloca memorie vectorului de 
+structuri (site). Structura se cheama site_data si memoreaza pentru un site 
+URL, numarul de accesari, checksum, lungimea in octeti a codului HTML, titlul,
+continutul, codul HTML, culoarea textului si culoarea de fundal. 
+	Se deschide pe rand fisierele citite din master.txt si intai de toate se 
+verifica daca trebuie realocata memorie vectorului de structuri. Acesta contine 
+3 structuri initial, iar variabila cap retine capacitatea curenta a vectorului
+de structuri.
+	Se citesc datele din fisier cu ajutorul functiei 'read_site_data'. Din 
+prima linie a unui fisier se citesc URL-ul, lungimea in octeti a codului HTML,
+numarul de accesari si checksum. Pe urma, restul din fisier reprezinta codul
+HTML, ce va fi memorat dinamic.
+	Toate datele dintr-un fisier au fost citite, insa nu am obtinut toate
+datele necesare. Pentru aceasta se apeleaza functia parsing_html, functie ce 
+obtine titlul, CSS pentru elemente si continutul unui site. Intai de toate 
+initialiaza specificatiile de stil(negru pentru text si alb pentru fundal).
+Apoi se declara variabila text ( sir de stringuri), care se aloca dinamic si in
+care se copiaza codul HTML al unui site, pentru a preveni pierderea acestuia.
+Astfel, se desparta textul prin delimitatorii '<' si '>'. Prima secventa este 
+"html", a doua fie "" sau "\n" etc. Ne intereaza secventa a treia (care
+contine titlul), a sasea (specificatiile de stil) si a saptea (continutul).
+Pentru specificatiile de stil vom apela o functie CSS(explicata mai jos), 
+deoarece secventa nu ne ofera informatie in mod direct precum celelalte doua. 
+Dupa parcurgerea intregului cod se elibereaza memoria variabilei 'text'.
+	Functia CSS, apelata in cadrul functiei parsing_html, identifica 
+specificatiile de stil(culoare text si culoare fundal). In cadrul acesteia, se
+declara un vector de culori(vector de siruri)'c' care memoreaza culorile ce
+pot aparea in cadrul site-urilor(white, black, red, green, blue, yellow).
+Se declara doi pointeri de char, 'ptext' si 'pback', care vor contine sirul de
+unde se specifica 'color' si 'background'. In caz de s-a gasit, micsoram 
+secventa cu cat avem minim nevoie pentru a nu avea si culoarea celelaite 
+specificatii. De exemplu, pentru background-color este nevoie de minim primele 
+23 de caractere( 16 pentru ca atatea litere contine 'background-color, 1 pentru
+':', si 6 deoarece culoarea cu cele mai multe litere contine 6 litere). Analog, 
+12 pentru culoarea textului. Se verifica care culoarea se regaseste in sir si 
+este memorat.
+
+	In momentul de fata toate datele de care avem nevoie au fost memorate,
+iar tot programul de pana acum se va repeta la toate task-urile.
+	Pentru task 1 este nevoie sa afisam doar URL-ul, numarul de accesari 
+si titlul site-urilor din baza de date. Se parcurge un for si se afiseaza 
+datele cerute.
+	Pentru ca nu mai avem nevoie de baza noastra de date, se elibereaza 
+memorie.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Task #2 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Citirea bazei de daze se faca analog ca la task 1 (prezentat putin mai 
+sus). De asemenea, functiile 'read_site_data', 'CSS' si 'parsing_html' , si 
+structura 'site_data' si enumerarea 'color' se regasesc si in acest program. 
+	De la tastatura se introduc cuvinte pana la primul enter. Intreg sirul 
+de cuvinte se salveaza in variabila 'key_words'. 
+	Pentru filtrarea site-urilor vom crea o noua baza de date, 'site2', 
+vector de structuri de tipul site_data, pentru a nu o pierde pe cea veche.
+Se apeleaza functia 'find_sites', care filtreaza site-urile ce contin cel
+putin un cuvant din sirul 'keys', dat ca parametru. Pentru a retine ce site-uri
+indeplinesc conditia, alocam dinamic un vector de int 'fr', unde
+	- fr[i]=0 : site-ul nu indeplineste conditia
+	- fr[i]=1 : site-ul indeplineste conditia.
+	Pentru a verifica conditia extragem cuvintele cu strtok, iar fiecare
+cuvant obtinut este verificat in fiecare site daca exista prin apelarea 
+functiei 'find_keyword', functie care returneaza 1 daca cuvantul a fost gasit
+in continutul unui site si 0 daca cuvantul nu a fost gasit. Astfel, daca 
+cuvantul a fost gasit intr-un site care inca nu a fost marcata cu 1 in vectorul 
+'fr', atunci este marcata cu 1 si creste variabila 'nr', care retine numarul de
+site-uri, care indeplinesc conditia. Dupa verificarea tuturor cuvintelor, se
+creeaza noua baza de date 'site2' (se adauga site-urile la care 'fr' a 
+fost 1).
+	Functia apelata anterior in cadrul functiei 'find_sites', 'find_keyword',
+verifica daca cuvantul 'word' (dat ca parametru) se regaseste in textul 'text'. 
+Daca nu, returneaza 0, altfel se verifica daca cuvantul nu este precedat sau 
+urmat de o litera(se apeleaza functia is_letter care returneaza 1 daca este 
+litera si 0 in caz contrar). Se returneaza 1 daca se aproba si 0 daca nu.
+	Ordonarea site-urilor se realizeaza prin functia 'sort', care primeste 
+ca argument un vector de structuri de site_data, o functie comparator 'compare' 
+si un int 'n'(numarul de site-uri). Sortarea se face folosind algoritmul 
+bubble-sort, criteriul de ordonare fiind dat de functia 'compare', iar 
+interschimbarea a doua site-uri fiind data de functia 'swap'.
+	In acest task, functia comparator mentionata anterior este 'compare2',
+care compara lexicografic continutul a doua site-uri, iar daca sunt identice, 
+criteriul va fi numarul de accesari in ordine descrecatoare. 
+	Functia 'swap' interschimba doua site-uri in cadrul bazei de date prin
+regula celor 3 pahare.
+	Dupa ce au fost filtrate si sortare site-urile in noua baza de date,
+afisam URL-urile fiecarei site din noua baza de date. 
+	Pentru ca nu mai avem nevoie de bazele noastre de date, se elibereaza 
+memorie.
+	 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Task #3 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Citirea bazei de daze se faca analog ca la task 1 (prezentat putin mai 
+sus). De asemenea, functiile 'read_site_data', 'CSS' si 'parsing_html', si 
+structura 'site_data' si enumerarea 'color' se regasesc si in acest program. 
+	De la tastatura se introduc cuvinte pana la primul enter. Intreg sirul 
+de cuvinte se salveaza in variabila 'key_words'. 
+	Pentru filtrarea site-urilor vom crea o noua baza de date, 'site2', 
+vector de structuri de tipul site_data, pentru a nu o pierde pe cea veche.
+Se apeleaza functia 'find_sites', care filtreaza site-urilor ce indeplinesc
+doua conditii:
+	- conditia 1: sa contina cel putin un cuvant/secventa care nu este 
+precedat de '-';
+	- conditia 2: sa nu contina cuvintele/secventele precedate de '-'
+	
+	Pentru a retine ce site-uri indeplinesc conditiile, se aloca dinamic
+un vector de int 'fr', unde
+	- fr[i]=0  : site-ul nu indeplineste conditia 1
+	- fr[i]=1  : site-ul indeplineste conditia 1
+	- fr[i]=-1 : site-ul nu indeplineste conditia 2
+	Astfel, site-urile dorite sunt cele care au in vectorul 'fr'
+valoarea 1( indeplinesc automat si conditia 2).
+	
+	Pentru a verifica conditiile extragem cuvintele cu strtok iar 
+pentru fiecare cuvant obtinut se executa urmatorii pasi:
+	- se copiaza in 'word' noul cuvant
+	- verificare daca nu face parte dintr-o secventa cu ajutorul
+	functiei 'read_sequence' (descrisa mai jos)
+	- daca tocmai s-a terminat de extras o secventa(ok_seq=-1), 
+	se copiaza in 'word'
+	- daca nu se citeste o secventa(ok_seq=0), se verifica conditiile 1 si 2
+	
+	Dupa verificarea tuturor cuvintelor, se creeaza noua baza de date 
+'site2' (se adauga site-urile la care frecventa a fost 1). 
+	
+	Functia 'read_sequence', apelata in functia 'find_sites', verifica 
+daca se citeste o secventa, statutul fiind reprezentata de variabila 'ok_seq' 
+si o memoreaza in variabila 'sequence'. Sunt 3 cazuri:
+	- se termina de citit secventa: ok_seq este -1
+	- se incepe de citit secventa: ok_seq este 1
+	- se citesc in continuare cuvinte din secventa daca ok_seq este 1
+	La fiecare caz se formeaza secventa in variabila 'sequence'.
+
+	Se ordoneaza noua baza de date prin apelul functiei 'sort', care se 
+regaseste si in task-ul 2, analog ca si 'swap'. Insa functia comparator este
+'compare3', care returneaza 0 daca numarul de accesari a primului site este >= 
+decat al doilea site si 1 in caz contrar.
+
+	Dupa ce au fost filtrare si sortare site-urile in noua baza de date,
+afisam URL-urile fiecarei site din noua baza de date. 
+	Pentru ca nu mai avem nevoie de bazele noastre de date, se elibereaza 
+memorie.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Task #4
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Citirea bazei de daze se faca analog ca la task 1 (prezentat putin mai 
+sus). De asemenea, functiile 'read_site_data', 'CSS' si 'parsing_html', si 
+structura 'site_data' si enumerarea 'color' se regasesc si in acest program.
+	Se citesc site-uri de la tastatura pana se introduce un sir vid. La 
+fiecare citire se verifica daca site-ul citit se afla in baza de date, iar daca
+da, sa se verifice daca este un site sigur sau nu. Astfel, se vor face 
+urmatoarele afisari:
+	- "Website not found!" : site-ul nu este in baza de date
+	- "Website safe!" : site-ul are checksum-ul egal cu cel oficial
+	- "Malicious website! Official key: CHEIE_OFICIALA. Found key:
+CHEIE_GASITA." : site-ul nu are checksum-ul egal cu cel oficial, iar 
+CHEIE_OFICIALA este checksum-ul stiut din baza de date si CHEIE_GASITA
+este checksum-ul obtinut.
+	Astfel, pentru calcularea checksum-ului unui site se apeleaza functia
+'checksum'. Fiecarui caracter de pe o pozitie arbitrara i este rotit cu i 
+pozitii la stanga (daca i este par) sau la dreapta (daca i este impar). La 
+final, se aplica XOR tuturor valorilor. 
+	Pentru a roti la dreapta bitii lui x cu k pozitii se apeleaza functia
+'rotr'. Variabila n ia valoarea lui x. De k ori se executa urmatoarele 
+instructiuni: 
+	- retinem bitul cel mai nesemnificativ in variabila 'p'
+	- se rotesc la dreapta bitii cu o pozitie 
+	- bitul cel mai semnficativ ia valoarea lui p.
+	
+	Pentru a roti la stanga bitii lui x cu k pozitii se apeleaza functia
+'rotl'. Variabila n ia valoarea lui x. De k ori se executa urmatoarele 
+instructiuni: 
+	- retinem bitul cel mai semnificativ in variabila 'p'
+	- se elimina bitul cel mai semnificativ
+	- se rotesc la stanga bitii cu o pozitie 
+	- bitul cel mai nesemnificativ ia valoarea lui p.
+
+	Pentru ca nu mai avem nevoie de baza noastra de date, se elibereaza 
+memorie.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Task #5
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	Citirea bazei de daze se faca analog ca la task 1 (prezentat mai sus). 
+De asemenea, functiile 'read_site_data', 'CSS', 'parsing_html', 'is_letter',
+'find_keyword', 'compare2', 'compare3', 'swap, 'sort', 'read_sequence' si 
+'find_sites'(de la task-ul 3), si structura site_data si enumerarea color
+se regasesc si in acest program. 
+	Se incepe modul curses. 
+	Se afla dimensiunile ecranului(xMax si yMax).
+	Pe primia linie se afiseaza numele motorului de cautare(BROWSERUL LUI
+BIJU) si in partea de jos a ecranului apare prima legenda. Utilizatorul este
+informat ca poate sa tasteze 'C' pentru a scrie textul sau 'Q' pentru a inchide
+programul. Se apeleaza functia 'C', in care utilizatorul tasteaza ce vrea 
+sa caute si cum doreste sa fie cautarea. 
+	Functia 'C' citeste pana cand s-a tastat 'C' sau 'Q'. Daca s-a tastat 
+'Q', intreg programul se inchide. Daca s-a tastat 'C', se creeaza fereastra
+pentru cautare si apare noua legenda, in care anunta utilizatorul ca pentru
+cautare sa apese Enter. Cu fiecare litera introdusa, se retine textul intr-o
+variabila 'text'. La apasarea tastei Enter, legenda se actualiazeaza, 
+utilizatorul avand 3 optiuni:
+	- 'S' pentru o cautare simpla
+	- 'A' pentru o cautare avansata
+	- 'Q' pentru terminarea programului.
+	Se citeste de la tastatura pana cand una dintre taste coincide cu una
+din cele 3 optiuni, iar tasta valida este memorata intr-o variabila 
+search_type.
+
+	Astfel, dupa apelul functiei 'C', daca:
+	- search_type este 'Q', se elibereaza memorie, se incheie modul curses
+ 	si se termina programul
+	- search_type este 'S', se creeaza noua baza de date (site2) dupa 
+	filtrarea textului si se sorteaza, avand ca functie comparator 
+	'compare2'
+	- search_type este 'S', se creeaza noua baza de date (site2) dupa 
+	filtrarea textului si se sorteaza, avand ca functie comparator 
+	'compare3'
+
+	Se creeaza obiectele (doar o parte din ele sunt adevaratele optiuni),
+meniul, fereastra asociata meniului si fereastra secundara. Se seteaza
+bordura la fereastra principala si se afiseaza textul cautat.
+	Obiectele contin titlurile, URL-urile pentru toate site-uri si " "
+pentru a delimita. Cele relevante vor fi titlurile.  
+	Apare noua legenda, utilizatorul fiind informat ca pentru a selecta
+un site trebuie sa apese Enter. Pentru a derula in jos, cursorul se va muta
+peste 3 obiecte mai jos, ajungand la titlul site-ului de dupa(in caz de 
+exista). Pentru a derula in sus, cursorul se va muta peste 3 obiecte mai sus, 
+ajungand la titlul site-ului de dinainte(in caz de exista). Cand a fost apasat
+Enter, se creeaza o noua fereastra pentru site-ul respectiv, unde titlul este
+in format Bold, iar textul este conform specificatiilor de stil. Pentru ca
+in enumerare ordinea culorilor nu coincide cu ordinea standard, se apeleaza
+functia 'colors', care decodifica culorile. 
+	Site-ul fiind afisat, apare noua legenda care il informeaza pe 
+utilizator ca poate sa se intoarca la meniu prin apasarea tastei 'B' sau
+ca poate opri programul prin afisarea tastei 'Q'. Cand a fost tastata 'B',
+se sterge (se acopera cu " ") intregul site, se reafiseaza meniul si legenda 
+anterioara. In momentul de fata, daca se tasteaza 'Q', se elibereaza memorie, 
+se incheie modul curses si se termina programul.
+ 
+
+	
